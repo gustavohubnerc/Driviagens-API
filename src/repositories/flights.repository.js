@@ -9,7 +9,7 @@ export async function getFilteredFlights(filters) {
     const { origin, destination, smaller_date, bigger_date } = filters;
 
     const query = `
-        SELECT f.id, c1.name AS origin, c2.name AS destination, f.date
+        SELECT f.id, c1.name AS origin, c2.name AS destination, TO_CHAR(f.date, 'DD-MM-YYYY') AS date
         FROM flights AS f
         JOIN cities AS c1 ON f.origin = c1.id
         JOIN cities AS c2 ON f.destination = c2.id

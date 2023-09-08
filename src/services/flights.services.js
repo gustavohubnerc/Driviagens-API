@@ -12,7 +12,7 @@ async function checkCityExistence(name) {
     }
 }
 
-export async function checkFlightValidity(origin, destination, date, smaller_date, bigger_date) {
+export async function checkFlightValidity(origin, destination, date) {
     const validationResult = flightSchema.validate({ origin, destination, date });
 
     if (validationResult.error) {
@@ -28,15 +28,24 @@ export async function checkFlightValidity(origin, destination, date, smaller_dat
 
     const currentDate = new Date();
     const flightDate = new Date(date.split("-").reverse().join("-"));
-    const smallerDate = new Date(smaller_date.split("-").reverse().join("-"));
-    const biggerDate = new Date(bigger_date.split("-").reverse().join("-"));
 
-    if (flightDate <= currentDate || smallerDate > biggerDate) {
+    if (flightDate <= currentDate) {
         throw httpStatus.UNPROCESSABLE_ENTITY;
     }
 }
 
 export async function filterFlights(queryParams) {
+    const { smaller_date, bigger_date } = queryParams;
+
+    if (smaller_date && bigger_date) {
+        const smallerDateObj = new Date(smaller_date.split("-").reverse().join("-"));
+        const biggerDateObj = new Date(bigger_date.split("-").reverse().join("-"));
+
+        if (smallerDateObj >= biggerDateObj) {
+            throw httpStatus.BAD_REQUEST;
+        }
+    }
+
     const { error, value } = flightQuerySchema.validate(queryParams, { convert: true });
 
     if (error) {
