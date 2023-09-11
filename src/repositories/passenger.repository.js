@@ -13,7 +13,7 @@ export async function getPassengersWithTravelCount(name) {
         WHERE $1::text IS NULL OR (p.firstname || ' ' || p.lastname) ILIKE '%' || $1 || '%'
         GROUP BY p.id
         ORDER BY travels DESC
-        LIMIT 10;
+        ;
     `;
 
     const result = await db.query(query, [name]);
