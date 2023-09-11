@@ -13,6 +13,10 @@ app.use(cors());
 app.use(router);
 app.use(errorHandlerMiddleware);
 
+app.get("/health", (req, res) => {
+	res.send("OK");
+})
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
 	console.log(`Servidor rodando na porta ${port}`)
